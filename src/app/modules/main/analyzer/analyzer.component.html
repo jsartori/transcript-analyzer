@@ -4,36 +4,38 @@
       <div class="select">
         <label for="agent">Agent</label>
         <select (change)="selectAgent($event)" id="agent" name="agent">
+          <option [value]="null">Agent</option>
           <option *ngFor="let agent of agents.agents$ | async" [value]="agent.id">{{agent.fullName}}</option>
         </select>
       </div>
 
       <div class="select">
         <label for="call">Call</label>
-        <select (change)="selectCall($event)" id="call" name="call">
-          <option *ngFor="let call of calls.activeAgentCalls$ | async" [value]="call.id">{{call.startTime}}</option>
+        <select [disabled]="!activeAgent || activeAgent.id == null" (change)="selectCall($event)" id="call" name="call">
+          <option [value]="null">Call</option>
+          <option *ngFor="let call of calls.activeAgentCalls$ | async" [value]="call.id">{{call.startTime | date: 'dd.MM.yyyy'}} {{ call.customer?.speakerName}}</option>
         </select>
       </div>
     </div>
 
-    <div style="align-items: center; display: flex; gap: .5rem;">
+    <div *ngIf="activeTranscript && activeTranscript.id != null" style="align-items: center; display: flex; gap: .5rem;">
       MATCHING SENSITIVITY
       <input
         #matcher (change)="calls.setMatchingPercentage(matcher.value)" [value]="calls.matchingPercentage$ | async"
         max="100"
         min="1" type="range"
-        value="50">
+        value="50">{{ calls.matchingPercentage$ | async }}%
     </div>
   </div>
 </ng-template>
 
-<section class="content">
+<section *ngIf="calls.activeTranscript$ | async as call; else noData" class="content">
   <div class="card">
     <h1>
       Real
-      <span>Matching: 32%</span>
+      <span>Matching: {{ calls.matchingPercentage$ | async }}%</span>
     </h1>
-    <table *ngIf="calls.activeTranscript$ | async as call" width="100%">
+    <table width="100%">
       <thead>
       <th>Time</th>
       <th>Speaker</th>
@@ -41,11 +43,13 @@
       </thead>
       <tbody>
       <tr *ngFor="let transcript of call.transcript">
-        <td>{{ transcript.timeFrom }}</td>
-        <td>{{ call.getSpeaker(transcript.channel) }}</td>
-        <td tooltip="61% matching with line #1 'This is a sample sentence #76'">
-          {{ transcript.sentence }}
-        </td>
+        <div [class.highlight]="checkTranscriptMatches(transcript)" >
+          <td>{{ transcript.timeFrom }}</td>
+          <td>{{ call.getSpeaker(transcript.channel) }}</td>
+          <td tooltip="61% matching with line #1 'This is a sample sentence #76'">
+            {{ transcript.sentence }}
+          </td>
+        </div>
       </tr>
       </tbody>
     </table>
@@ -54,14 +58,33 @@
   <div class="card">
     <h1>
       Expected
-      <span>Matching: 0%</span>
+      <span>Percent of script covered: %</span>
     </h1>
-    <!-- TODO: Add Expected -->
+    <table width="100%">
+      <thead>
+      <th>Line</th>
+      <th>Speaker</th>
+      <th>Sentence</th>
+      </thead>
+      <tbody>
+      <tr *ngFor="let scriptLine of call.script">
+        <div [class.highlight]="checkSimilarity(scriptLine)">
+          <td>{{ (scriptLine.order + 1) }}</td>
+          <td>Rep:</td>
+          <td tooltip="61% matching with line #1 'This is a sample sentence #76'">
+            {{ scriptLine.sentence }}
+          </td>
+        </div>
+      </tr>
+      </tbody>
+    </table>
   </div>
 </section>
 
-<ng-template>
+<ng-template #noData> 
   <div class="empty-state">
-    No data to be displayed
+    <strong>Selection Pending</strong>
+    <br>
+    <p>Select a call from top menu ad a transcript analysis will be shown here</p>
   </div>
 </ng-template>

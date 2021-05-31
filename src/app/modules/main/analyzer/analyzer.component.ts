@@ -2,6 +2,8 @@ import {AfterViewInit, ChangeDetectionStrategy, Component, OnInit, TemplateRef, 
 import {Router} from '@angular/router';
 import AgentFacade from 'src/app/core/facades/agent.facade';
 import CallFacade from 'src/app/core/facades/call.facade';
+import Agent from 'src/app/core/models/agent';
+import Transcript from 'src/app/core/models/transcript.model';
 
 import TemplateService from 'src/app/core/services/template.service';
 
@@ -16,6 +18,9 @@ export default class AnalyzerComponent implements OnInit, AfterViewInit {
   private subHeader?: TemplateRef<any>;
   public dataSource: any[]    = [];
   public dataSourceRep: any[] = [];
+  public activeAgent: Agent = new Agent();
+  public activeTranscript: Transcript = new Transcript();
+  public matchingPercentage = 0;
 
   constructor(
     public agents: AgentFacade,
@@ -32,14 +37,36 @@ export default class AnalyzerComponent implements OnInit, AfterViewInit {
   public ngOnInit(): void {
     this.dataSource    = MOCK_DATA();
     this.dataSourceRep = MOCK_DATA().slice(-25);
+
+    this.agents.activeAgent$.subscribe((agent) => {
+      this.activeAgent = agent;
+    });
+
+    this.calls.activeTranscript$.subscribe((transcript) => {
+      this.activeTranscript = transcript;
+    });
+
+    this.calls.matchingPercentage$.subscribe((percentage) => {
+      this.matchingPercentage = percentage;
+    });
   }
 
   public selectAgent(event: any): void {
     this.agents.setActiveAgent(event.target?.value);
-  };
+  }
 
   public selectCall(event: any): void {
     this.calls.selectCall(event.target?.value);
+    this.calls.setMatchingPercentage(38);
+  }
+
+  public checkSimilarity(scriptLine: any): boolean {
+    return (scriptLine.similarity * 100) >= this.matchingPercentage;
+  }
+
+  public checkTranscriptMatches(transcriptLine: any): boolean {
+    console.log('transcriptLine', transcriptLine);
+    return transcriptLine.matching_sentence !== '';
   }
 }
 

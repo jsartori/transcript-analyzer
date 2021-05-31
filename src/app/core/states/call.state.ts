@@ -35,7 +35,7 @@ export default class CallState {
 
     this._agents.activeAgent$
       .subscribe((agent: Agent) => {
-        const calls = this._calls$.value.filter((call: Call) => call.agent?.agentId === agent.id);
+        const calls = this._calls$.value.filter((call: Call) => call.agent?.agentId === agent?.id);
         this._activeAgentCalls$.next(calls);
       });
   }
