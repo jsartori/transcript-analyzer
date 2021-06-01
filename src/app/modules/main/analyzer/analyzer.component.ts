@@ -21,6 +21,8 @@ export default class AnalyzerComponent implements OnInit, AfterViewInit {
   public activeAgent: Agent = new Agent();
   public activeTranscript: Transcript = new Transcript();
   public matchingPercentage = 0;
+  public matchingScriptPercentage = 0;
+  public coveredScriptPercentage = 0;
 
   constructor(
     public agents: AgentFacade,
@@ -48,6 +50,8 @@ export default class AnalyzerComponent implements OnInit, AfterViewInit {
 
     this.calls.matchingPercentage$.subscribe((percentage) => {
       this.matchingPercentage = percentage;
+      this.matchingScriptPercentage = Math.round(this.countMatchingPercentage(this.activeTranscript.transcript));
+      this.coveredScriptPercentage = Math.round(this.countCoveragePercentage(this.activeTranscript.script));
     });
   }
 
@@ -65,8 +69,35 @@ export default class AnalyzerComponent implements OnInit, AfterViewInit {
   }
 
   public checkTranscriptMatches(transcriptLine: any): boolean {
-    console.log('transcriptLine', transcriptLine);
     return transcriptLine.matching_sentence !== '';
+  }
+
+  public highLightScriptLine(transcriptLine: any): void {
+    if (transcriptLine.matching_sentence !== '') {
+      const indexLine = this.activeTranscript.script.findIndex((e) => e.sentence === transcriptLine.matching_sentence);
+      if (indexLine >= 0) {
+        this.activeTranscript.script[indexLine].hovered = true;
+      }
+    }
+  }
+
+  public unHighLightScriptLine(transcriptLine: any): void {
+    if (transcriptLine.matching_sentence !== '') {
+      const indexLine = this.activeTranscript.script.findIndex((e) => e.sentence === transcriptLine.matching_sentence);
+      if (indexLine >= 0) {
+        this.activeTranscript.script[indexLine].hovered = false;
+      }
+    }
+  }
+
+  private countMatchingPercentage(scripts: any): number {
+    const lines = scripts.filter((e: any) => e.matching_sentence !== '');
+    return lines.length / scripts.length * 100;
+  }
+
+  public countCoveragePercentage(script: any): number {
+    const lines = script.filter((e: any) => this.checkSimilarity(e));
+    return lines.length / script.length * 100;
   }
 }
 

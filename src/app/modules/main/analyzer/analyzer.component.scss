@@ -21,6 +21,8 @@
     flex-grow:  1;
     max-width:  calc(50% - 1.5rem);
     padding:    1.5rem;
+    overflow: scroll;
+    max-height: 32rem;
 
     h1 {
       background-color: #EFEFF1;
@@ -37,6 +39,14 @@
 
     .highlight {
       background: lightgray;
+
+      :hover {
+        background: darkgray;
+      }
+    }
+
+    .darkerHighlight {
+      background: darkgray;
     }
   }
 }

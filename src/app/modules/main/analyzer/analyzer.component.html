@@ -33,7 +33,8 @@
   <div class="card">
     <h1>
       Real
-      <span>Matching: {{ calls.matchingPercentage$ | async }}%</span>
+      <span hidden>Matching: {{ calls.matchingPercentage$ | async }}%</span><br>
+      <small>Alignment to script: {{ matchingScriptPercentage }}%</small>
     </h1>
     <table width="100%">
       <thead>
@@ -42,11 +43,11 @@
       <th>Sentence</th>
       </thead>
       <tbody>
-      <tr *ngFor="let transcript of call.transcript">
-        <div [class.highlight]="checkTranscriptMatches(transcript)" >
-          <td>{{ transcript.timeFrom }}</td>
+      <tr [class.highlight]="checkTranscriptMatches(transcript)" *ngFor="let transcript of call.transcript">
+        <div (mouseover)="highLightScriptLine(transcript)" (mouseout)="unHighLightScriptLine(transcript)">
+          <td>{{ (transcript.timeFrom || 0) * 1000 | date:'H:mm:ss':'UTC' }}</td>
           <td>{{ call.getSpeaker(transcript.channel) }}</td>
-          <td tooltip="61% matching with line #1 'This is a sample sentence #76'">
+          <td title="{{ (transcript.similarity || 0) * 100 }}% matching with line #{{ transcript.matching_line }} '{{ transcript.matching_sentence }}'">
             {{ transcript.sentence }}
           </td>
         </div>
@@ -58,7 +59,7 @@
   <div class="card">
     <h1>
       Expected
-      <span>Percent of script covered: %</span>
+      <small>Script covered: {{ coveredScriptPercentage }}%</small>
     </h1>
     <table width="100%">
       <thead>
@@ -68,10 +69,10 @@
       </thead>
       <tbody>
       <tr *ngFor="let scriptLine of call.script">
-        <div [class.highlight]="checkSimilarity(scriptLine)">
+        <div [class.highlight]="checkSimilarity(scriptLine)" [class.darkerHighlight]="scriptLine.hovered === true">
           <td>{{ (scriptLine.order + 1) }}</td>
           <td>Rep:</td>
-          <td tooltip="61% matching with line #1 'This is a sample sentence #76'">
+          <td>
             {{ scriptLine.sentence }}
           </td>
         </div>

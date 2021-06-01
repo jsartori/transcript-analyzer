@@ -18,6 +18,8 @@ export default class Script {
   @JsonProperty()
   public timeTo: number | null;
 
+  public hovered: boolean = false;
+
   constructor() {
     this.channel          = 0;
     this.matchingLine     = null;
