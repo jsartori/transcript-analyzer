@@ -2,29 +2,56 @@
   <div class="flex">
     <div class="selects">
       <div class="select">
-        <label for="agent">Agent</label>
+        <!--label for="agent">Agent</label>
         <select (change)="selectAgent($event)" id="agent" name="agent">
           <option [value]="null">Agent</option>
           <option *ngFor="let agent of agents.agents$ | async" [value]="agent.id">{{agent.fullName}}</option>
-        </select>
+        </select-->  
+        <mat-form-field appearance="fill">
+            <mat-label>
+              <mat-icon style="font-size: x-large;" class="material-icons-outlined">
+                supervisor_account
+              </mat-icon>
+              Agent
+            </mat-label>
+          <mat-select (selectionChange)="selectAgent($event)">
+            <mat-option *ngFor="let agent of agents.agents$ | async" [value]="agent.id">
+              {{agent.fullName}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
 
       <div class="select">
-        <label for="call">Call</label>
+        <!--label for="call">Call</label>
         <select [disabled]="!activeAgent || activeAgent.id == null" (change)="selectCall($event)" id="call" name="call">
           <option [value]="null">Call</option>
-          <option *ngFor="let call of calls.activeAgentCalls$ | async" [value]="call.id">{{call.startTime | date: 'dd.MM.yyyy'}} {{ call.customer?.speakerName}}</option>
-        </select>
+          <option *ngFor="let call of calls.activeAgentCalls$ | async" [value]="call.id">{{call.startTime | date:
+            'dd.MM.yyyy'}} {{ call.customer?.speakerName}}</option>
+        </select-->
+
+        <mat-form-field style="width: 15rem;" appearance="fill">
+          <mat-label>
+            <mat-icon style="font-size: x-large;" class="material-icons-outlined">
+              perm_phone_msg
+            </mat-icon>
+            Agent
+          </mat-label>
+        <mat-select [disabled]="!activeAgent || activeAgent.id == null" (selectionChange)="selectCall($event)">
+          <mat-option *ngFor="let call of calls.activeAgentCalls$ | async" [value]="call.id">
+            {{call.startTime | date:
+              'dd.MM.yyyy'}} {{ call.customer?.speakerName}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
       </div>
     </div>
 
-    <div *ngIf="activeTranscript && activeTranscript.id != null" style="align-items: center; display: flex; gap: .5rem;">
+    <div *ngIf="activeTranscript && activeTranscript.id != null"
+      style="align-items: center; display: flex; gap: .5rem;">
       MATCHING SENSITIVITY
-      <input
-        #matcher (change)="calls.setMatchingPercentage(matcher.value)" [value]="calls.matchingPercentage$ | async"
-        max="100"
-        min="1" type="range"
-        value="50">{{ calls.matchingPercentage$ | async }}%
+      <input #matcher (change)="calls.setMatchingPercentage(matcher.value)" [value]="calls.matchingPercentage$ | async"
+        max="100" min="1" type="range" value="50">{{ calls.matchingPercentage$ | async }}%
     </div>
   </div>
 </ng-template>
@@ -38,20 +65,21 @@
     </h1>
     <table width="100%">
       <thead>
-      <th>Time</th>
-      <th>Speaker</th>
-      <th>Sentence</th>
+        <th>Time</th>
+        <th>Speaker</th>
+        <th>Sentence</th>
       </thead>
       <tbody>
-      <tr [class.highlight]="checkTranscriptMatches(transcript)" *ngFor="let transcript of call.transcript">
-        <div (mouseover)="highLightScriptLine(transcript)" (mouseout)="unHighLightScriptLine(transcript)">
-          <td>{{ (transcript.timeFrom || 0) * 1000 | date:'H:mm:ss':'UTC' }}</td>
-          <td>{{ call.getSpeaker(transcript.channel) }}</td>
-          <td title="{{ (transcript.similarity || 0) * 100 }}% matching with line #{{ transcript.matching_line }} '{{ transcript.matching_sentence }}'">
-            {{ transcript.sentence }}
-          </td>
-        </div>
-      </tr>
+        <tr [class.highlight]="checkTranscriptMatches(transcript)" *ngFor="let transcript of call.transcript">
+          <div (mouseover)="highLightScriptLine(transcript)" (mouseout)="unHighLightScriptLine(transcript)">
+            <td>{{ (transcript.timeFrom || 0) * 1000 | date:'H:mm:ss':'UTC' }}</td>
+            <td>{{ call.getSpeaker(transcript.channel) }}</td>
+            <td
+              title="{{ (transcript.similarity || 0) * 100 }}% matching with line #{{ transcript.matching_line }} '{{ transcript.matching_sentence }}'">
+              {{ transcript.sentence }}
+            </td>
+          </div>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -63,29 +91,31 @@
     </h1>
     <table width="100%">
       <thead>
-      <th>Line</th>
-      <th>Speaker</th>
-      <th>Sentence</th>
+        <th>Line</th>
+        <th>Speaker</th>
+        <th>Sentence</th>
       </thead>
       <tbody>
-      <tr *ngFor="let scriptLine of call.script">
-        <div [class.highlight]="checkSimilarity(scriptLine)" [class.darkerHighlight]="scriptLine.hovered === true">
-          <td>{{ (scriptLine.order + 1) }}</td>
-          <td>Rep:</td>
-          <td>
-            {{ scriptLine.sentence }}
-          </td>
-        </div>
-      </tr>
+        <tr *ngFor="let scriptLine of call.script">
+          <div [class.highlight]="checkSimilarity(scriptLine)" [class.darkerHighlight]="scriptLine.hovered === true">
+            <td>{{ (scriptLine.order + 1) }}</td>
+            <td>Rep:</td>
+            <td>
+              {{ scriptLine.sentence }}
+            </td>
+          </div>
+        </tr>
       </tbody>
     </table>
   </div>
 </section>
 
-<ng-template #noData> 
+<ng-template #noData>
   <div class="empty-state">
-    <strong>Selection Pending</strong>
-    <br>
+    <mat-icon ><span style="font-size: 7rem;" class="material-icons">
+      question_answer
+      </span></mat-icon>
+    <h1><strong>Selection Pending</strong></h1>
     <p>Select a call from top menu ad a transcript analysis will be shown here</p>
   </div>
 </ng-template>

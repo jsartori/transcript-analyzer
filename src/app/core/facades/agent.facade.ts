@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import AgentState from 'src/app/core/states/agent.state';
+import AgentState from '../states/agent.state';
 
 @Injectable({providedIn: 'root'})
 export default class AgentFacade {

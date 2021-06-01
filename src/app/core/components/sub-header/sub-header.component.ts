@@ -1,5 +1,4 @@
 import {Component, TemplateRef} from '@angular/core';
-
 import TemplateService from '../../services/template.service';
 
 @Component({

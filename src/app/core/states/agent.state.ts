@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Subject} from 'rxjs';
 import Agent from 'src/app/core/models/agent';
+import AgentService from '../services/agent.service';
 
-import AgentService from 'src/app/core/services/agent.service';
 
 @Injectable({providedIn: 'root'})
 export default class AgentState {

@@ -1,5 +1,9 @@
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+
 import { RouterModule } from '@angular/router';
 
 import { CoreModule } from 'src/app/core/core.module';
@@ -12,7 +16,10 @@ import { ROUTES } from './analyzer.routes';
     imports: [
         CoreModule,
         RouterModule.forChild(ROUTES),
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatSelectModule,
+        MatIconModule,
+        MatCardModule
     ]
 })
 export class AnalyzerModule {}

@@ -27,9 +27,8 @@ export default class AnalyzerComponent implements OnInit, AfterViewInit {
   constructor(
     public agents: AgentFacade,
     public calls: CallFacade,
-    private _tplService: TemplateService,
-    private _router: Router
-  ) {
+    // tslint:disable-next-line:variable-name
+    private _tplService: TemplateService  ) {
   }
 
   public ngAfterViewInit(): void {
@@ -56,11 +55,11 @@ export default class AnalyzerComponent implements OnInit, AfterViewInit {
   }
 
   public selectAgent(event: any): void {
-    this.agents.setActiveAgent(event.target?.value);
+    this.agents.setActiveAgent(event.value);
   }
 
   public selectCall(event: any): void {
-    this.calls.selectCall(event.target?.value);
+    this.calls.selectCall(event.value);
     this.calls.setMatchingPercentage(38);
   }
 

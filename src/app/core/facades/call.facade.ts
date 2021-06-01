@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import Transcript from 'src/app/core/models/transcript.model';
+import CallState from '../states/call.state';
 
-import CallState from 'src/app/core/states/call.state';
 
 @Injectable({providedIn: 'root'})
 export default class CallFacade {

@@ -6,7 +6,7 @@ import Agent from 'src/app/core/models/agent';
 
 import Call from 'src/app/core/models/call.model';
 import Transcript from 'src/app/core/models/transcript.model';
-import CallService from 'src/app/core/services/call.service';
+import CallService from '../services/call.service';
 
 @Injectable({providedIn: 'root'})
 export default class CallState {
