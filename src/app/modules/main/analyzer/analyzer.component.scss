@@ -22,16 +22,26 @@
 .content {
   display: flex;
   gap:     1.5rem;
+  font-family: 'Roboto Condensed', sans-serif;
+  
+  table {
+    display: grid;
+
+    th {
+      text-align: left;
+    }
+  }
 
   .card {
     box-shadow: 0 3px 3px rgba(0, 0, 0, .2);
     flex-grow:  1;
     max-width:  calc(50% - 1.5rem);
     padding:    1.5rem;
-    overflow: scroll;
+    overflow-x: hidden;
     max-height: 32rem;
-
+    margin-bottom: 1rem;
     h1 {
+      font-weight: bold;
       background-color: #EFEFF1;
       border-bottom:    1px solid rgba(0, 0, 0, .12);
       display:          flex;

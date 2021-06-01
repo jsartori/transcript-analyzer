@@ -3,7 +3,6 @@ import {BehaviorSubject, Subject} from 'rxjs';
 import Agent from 'src/app/core/models/agent';
 import AgentService from '../services/agent.service';
 
-
 @Injectable({providedIn: 'root'})
 export default class AgentState {
   private readonly _activeAgent$ = new Subject<Agent>();

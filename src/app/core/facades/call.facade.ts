@@ -3,7 +3,6 @@ import {Observable} from 'rxjs';
 import Transcript from 'src/app/core/models/transcript.model';
 import CallState from '../states/call.state';
 
-
 @Injectable({providedIn: 'root'})
 export default class CallFacade {
   public activeAgentCalls$                         = this._state.activeAgentCalls$;

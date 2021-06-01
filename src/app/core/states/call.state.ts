@@ -30,7 +30,6 @@ export default class CallState {
     this._svc.getTranscripts$()
       .subscribe((transcripts: Transcript[]) => {
         this._transcripts$.next(transcripts);
-        console.log(this._transcripts$.value);
       });
 
     this._agents.activeAgent$
@@ -43,11 +42,9 @@ export default class CallState {
   public selectCall(id: string): void {
     const transcript = this._transcripts$.value.find((transcript: Transcript) => transcript.id === id);
     this._activeTranscript$.next(transcript);
-    console.log(id, transcript);
   }
 
   public setMatchingPercentage(value: number | string): void {
     this._matchingPercentage$.next(parseInt(`${value}`));
-    console.log('Matching %', value);
   }
 }
